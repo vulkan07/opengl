@@ -10,6 +10,7 @@ public class Map {
     int w, h;
     ShaderProgram shaderProgram;
     VertexArrayObject vao;
+    Texture texture;
 
     public Map(int w, int h) {
         this.w = w;
@@ -31,6 +32,14 @@ public class Map {
         vao.setVertexData(vArray);
         vao.setElementData(RenderableQuad.elementArray);
         vao.addAttributePointer(2); //Position (x,y)
+        vao.addAttributePointer(2); //TX coords (u,v)
+
+        texture = new Texture();
+        texture.generate();
+        texture.loadImage("test");
+        shaderProgram.uploadTexture("uTexSampler", 0);
+        texture.uploadImageToGPU(false);
+        texture.bind();
     }
 
     private int[] generateElementArray()
