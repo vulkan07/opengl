@@ -49,6 +49,7 @@ public class Window {
 
         GLFW.glfwSetCursorPosCallback(pWindow, MouseHandler::mousePosCallback);
         GLFW.glfwSetMouseButtonCallback(pWindow, MouseHandler::mouseButtonCallback);
+        GLFW.glfwSetScrollCallback(pWindow, MouseHandler::mouseScrollCallback);
 
         //Make OpenGL context current
         GLFW.glfwMakeContextCurrent(pWindow);
@@ -65,7 +66,7 @@ public class Window {
         camera = new Camera(new Vector2f());
         map = new Map(60,34);
 
-        GL30.glClearColor(0f,0f,0f, 1f);
+        GL30.glClearColor(.53f,.7f,.8f, 1f);
     }
 
     Map map;
@@ -111,24 +112,26 @@ public class Window {
     public void render() {
 
         GL30.glClear(GL30.GL_COLOR_BUFFER_BIT);
-/*
-        if (alpha > 1)
+
+        /*
+        if (alpha > .4)
             alpha = 0;
 
-        alpha += 0.02;
-*/
+        alpha += 0.015;
+        */
+
         if (MouseHandler.getButton(0)) {
-            camera.target.x -= MouseHandler.getScrollX();
-            camera.target.y -= MouseHandler.getScrollY();
+            camera.target.x -= MouseHandler.getDeltaX()*camera.zoom;
+            camera.target.y -= MouseHandler.getDeltaY()*camera.zoom;
         }
 
-        MouseHandler.update();
         camera.update();
+        MouseHandler.update();
 
 
         //------------------\\
 
-        map.render(camera, alpha);
+        map.render(camera);
 
         //------------------\\
 

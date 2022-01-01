@@ -25,14 +25,18 @@ in vec2 fUV;
 out vec4 color;
 
 uniform float uAlpha;
-uniform float uTime;
 uniform sampler2D uTexSampler;
+uniform vec4 uBackColor;
 
 void main()
 {
     vec4 tColor = texture(uTexSampler, fUV);
     if (tColor.a == 0.)
-        discard;
+    discard;
 
-    color = tColor-uAlpha;
+    vec4 avg = vec4((tColor.x + tColor.y + tColor.z) / 3) + .1;
+    avg.w = 1;
+    tColor = mix(avg, tColor, .4);
+
+    color = tColor - uBackColor - uAlpha;
 }

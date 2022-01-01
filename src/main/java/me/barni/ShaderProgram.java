@@ -2,6 +2,7 @@ package me.barni;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
@@ -75,34 +76,40 @@ public class ShaderProgram {
         GL30.glUseProgram(0);
     }
 
-    public void uploadMat4(String varName, Matrix4f mat4)
-    {
+    public void uploadMat4(String varName, Matrix4f mat4) {
         bind();
         int varLoc = GL30.glGetUniformLocation(id, varName);
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16); //4*4
         mat4.get(matBuffer); //Loads mat4 into matBuffer
         GL30.glUniformMatrix4fv(varLoc, false, matBuffer);
     }
-    public void uploadVec2(String varName, Vector2f vec2)
-    {
+
+    public void uploadVec2(String varName, Vector2f vec2) {
         bind();
         int varLoc = GL30.glGetUniformLocation(id, varName);
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16); //4*4
         vec2.get(matBuffer); //Loads mat4 into matBuffer
         GL30.glUniform2fv(varLoc, matBuffer);
     }
-    public void uploadFloat(String varName, float f)
-    {
+    public void uploadVec4(String varName, Vector4f vec4) {
+        bind();
+        int varLoc = GL30.glGetUniformLocation(id, varName);
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(4); //4*4
+        vec4.get(matBuffer); //Loads mat4 into matBuffer
+        GL30.glUniform4fv(varLoc, matBuffer);
+    }
+
+    public void uploadFloat(String varName, float f) {
         bind();
         int varLoc = GL30.glGetUniformLocation(id, varName);
         GL30.glUniform1f(varLoc, f);
     }
-    public void uploadTexture(String varName, int slot)
-    {
+
+    public void selectTextureSlot(String varName, int slot) {
         bind();
         int varLoc = GL30.glGetUniformLocation(id, varName);
         GL30.glUniform1i(varLoc, slot);
-        GL30.glActiveTexture(GL30.GL_TEXTURE0);
+        GL30.glActiveTexture(GL30.GL_TEXTURE0+slot);
     }
 
 }

@@ -47,8 +47,12 @@ public class Camera {
         return projMat;
     }
 
+    float zoom = 1;
+
     public void update() {
         pos = pos.lerp(target,.01f);
+        zoom -= MouseHandler.getScrollY()/20;
+        setZoom(zoom);
     }
 
     public Vector2f lerp(Vector2f v1, float t) {

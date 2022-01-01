@@ -7,8 +7,12 @@ public class MouseHandler {
     private static float x;
     private static float y;
 
+    private static float scrollX;
+    private static float scrollY;
+
     private static float prevX;
     private static float prevY;
+
     private static boolean buttons[] = new boolean[5];
 
     public MouseHandler() {
@@ -16,12 +20,20 @@ public class MouseHandler {
         y = 0;
     }
 
-    public static float getScrollX() {
+    public static float getDeltaX() {
         return x-prevX;
     }
 
-    public static float getScrollY() {
+    public static float getDeltaY() {
         return y-prevY;
+    }
+
+    public static float getScrollX() {
+        return scrollX;
+    }
+
+    public static float getScrollY() {
+        return scrollY;
     }
 
     public static float getX() {
@@ -47,10 +59,18 @@ public class MouseHandler {
     {
         prevX = x;
         prevY = y;
+        scrollX = 0;
+        scrollY = 0;
+        prevY = y;
     }
 
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
         if (button < buttons.length)
             buttons[button] = action == GLFW.GLFW_PRESS;
+    }
+    public static void mouseScrollCallback(long window, double xoffset, double yoffset)
+    {
+        scrollX = (float)xoffset;
+        scrollY = (float)yoffset;
     }
 }
