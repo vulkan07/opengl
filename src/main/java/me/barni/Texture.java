@@ -23,8 +23,7 @@ public class Texture {
             width = img.getWidth();
             height = img.getHeight();
         } catch (IOException e) {
-            System.out.println("Failed to load image!");
-            e.printStackTrace();
+            System.out.println("Failed to load image! :" + fullPath);
             return false;
         }
         return true;

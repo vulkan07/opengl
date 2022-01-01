@@ -87,7 +87,7 @@ public class ShaderProgram {
     public void uploadVec2(String varName, Vector2f vec2) {
         bind();
         int varLoc = GL30.glGetUniformLocation(id, varName);
-        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16); //4*4
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(2); //4*4
         vec2.get(matBuffer); //Loads mat4 into matBuffer
         GL30.glUniform2fv(varLoc, matBuffer);
     }

@@ -10,7 +10,7 @@ public class Camera {
 
     public Camera(Vector2f pos) {
         this.pos = pos;
-        this.target = pos;
+        this.target = new Vector2f();
         projMat = new Matrix4f();
         viewMat = new Matrix4f();
         adjutProjection();
@@ -35,7 +35,7 @@ public class Camera {
 
         //Generates viewmatrix
         viewMat.lookAt(
-                new Vector3f(pos.x, pos.y, 20), // Position
+                new Vector3f(pos.x, pos.y, 10),  // Position
                 camFront.add(pos.x, pos.y, 0f),  // Looking at
                 camUp                               // Where's up
         );
@@ -47,11 +47,15 @@ public class Camera {
         return projMat;
     }
 
-    float zoom = 1;
+    float zoom = 1, targZoom = 1;
+    final int W = 1920, h = 1080;
 
     public void update() {
-        pos = pos.lerp(target,.01f);
-        zoom -= MouseHandler.getScrollY()/20;
+        pos = pos.lerp(target,.12f);
+        targZoom -= MouseHandler.getScrollY()/20;
+
+
+        zoom = lerp(zoom, targZoom, .1f);
         setZoom(zoom);
     }
 
@@ -59,5 +63,9 @@ public class Camera {
         return new Vector2f(
                 (1 - t) * pos.x + t * v1.x,
                 (1 - t) * pos.y + t * v1.y);
+    }
+
+    public static float lerp(float v0, float v1, float t) {
+        return (1 - t) * v0 + t * v1;
     }
 }

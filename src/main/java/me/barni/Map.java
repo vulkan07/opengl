@@ -77,7 +77,7 @@ public class Map {
     int w, h;
     ShaderProgram frontShader, backShader;
     VertexArrayObject vao;
-    Texture[] atlas;
+    Texture[] atlas, normAtlas;
 
     public Map(int w, int h) {
         this.w = w;
@@ -90,7 +90,7 @@ public class Map {
         backShader = new ShaderProgram();
         backShader.create("backgroundTile");
         backShader.link();
-        backShader.uploadVec4("uBackColor", new Vector4f(.2f,.2f, .2f, 0));
+        backShader.uploadVec4("uBackColor", new Vector4f(.2f, .2f, .2f, 0));
 
         vao = new VertexArrayObject();
         float[] vArray = new float[8];
@@ -114,6 +114,7 @@ public class Map {
                 "iron"};
 
         atlas = new Texture[txts.length];
+        normAtlas = new Texture[txts.length];
 
         for (int i = 0; i < txts.length; i++) {
             if (txts[i] == null)
@@ -123,16 +124,23 @@ public class Map {
             atlas[i].loadImage(txts[i]);
             atlas[i].uploadImageToGPU(false);
             atlas[i].bind();
+
+            normAtlas[i] = new Texture();
+
+            if (!normAtlas[i].loadImage(txts[i] + "_nor"))
+                normAtlas[i] = null;
+            else {
+                normAtlas[i].generate();
+                normAtlas[i].uploadImageToGPU(false);
+                normAtlas[i].bind();
+            }
         }
-        GL30.glEnable(GL30.GL_BLEND);
-        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     final int TSIZE = 32;
 
     public void render(Camera camera) {
         vao.bind(false);
-
 
         renderTiles(false, camera);
         renderTiles(true, camera);
@@ -152,8 +160,6 @@ public class Map {
         currentShader.uploadMat4("uProjMat", camera.getProjMat());
         currentShader.uploadMat4("uViewMat", camera.getViewMat());
         currentShader.uploadFloat("uAlpha", 0);
-        currentShader.uploadFloat("uTime", time);
-
 
         for (int i = 0; i < w * h; i++) {
 
@@ -167,12 +173,22 @@ public class Map {
                     i / w * TSIZE, TSIZE, TSIZE);
             vao.setVertexData(vArray);
 
-            //frontShader.selectTextureSlot("uTexSampler", 0);
 
-            if (front)
+            if (front) {
+                if (normAtlas[tiles[i]] != null) {
+                    currentShader.selectTextureSlot("uNorSampler", 1);
+                    normAtlas[tiles[i]].bind();
+                }
+                currentShader.selectTextureSlot("uTexSampler", 0);
                 atlas[tiles[i]].bind();
-            else
+            } else {
+                if (normAtlas[backTiles[i]] != null) {
+                    currentShader.selectTextureSlot("uNorSampler", 1);
+                    normAtlas[backTiles[i]].bind();
+                }
+                currentShader.selectTextureSlot("uTexSampler", 0);
                 atlas[backTiles[i]].bind();
+            }
 
             GL30.glDrawElements(GL30.GL_TRIANGLES, vao.getVertexLen(), GL30.GL_UNSIGNED_INT, 0);
 

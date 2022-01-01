@@ -40,6 +40,7 @@ public class Window {
         GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW.GLFW_FALSE);
         //GLFW.glfwWindowHint(GLFW.GLFW_MAXIMIZED, GLFW.GLFW_TRUE);
         GLFW.glfwWindowHint(GLFW.GLFW_DECORATED, GLFW.GLFW_FALSE);
+        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
 
         //Create window
         pWindow = GLFW.glfwCreateWindow(width, height, title, NULL, NULL);
@@ -67,6 +68,9 @@ public class Window {
         map = new Map(60,34);
 
         GL30.glClearColor(.53f,.7f,.8f, 1f);
+        GL30.glEnable(GL30.GL_BLEND);
+        GL30.glEnable(GL30.GL_MULTISAMPLE);
+        GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     Map map;
