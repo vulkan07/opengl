@@ -65,9 +65,10 @@ public class Window {
         GL.createCapabilities();
 
         camera = new Camera(new Vector2f());
-        map = new Map(60,34);
+        map = new Map(60, 34);
 
-        GL30.glClearColor(.53f,.7f,.8f, 1f);
+        //GL30.glClearColor(.53f,.7f,.8f, 1f);
+        GL30.glClearColor(0f, 0f, 0f, 1f);
         GL30.glEnable(GL30.GL_BLEND);
         GL30.glEnable(GL30.GL_MULTISAMPLE);
         GL30.glBlendFunc(GL30.GL_SRC_ALPHA, GL30.GL_ONE_MINUS_SRC_ALPHA);
@@ -125,8 +126,8 @@ public class Window {
         */
 
         if (MouseHandler.getButton(0)) {
-            camera.target.x -= MouseHandler.getDeltaX()*camera.zoom;
-            camera.target.y -= MouseHandler.getDeltaY()*camera.zoom;
+            camera.target.x -= MouseHandler.getDeltaX() * camera.zoom;
+            camera.target.y -= MouseHandler.getDeltaY() * camera.zoom;
         }
 
         camera.update();
